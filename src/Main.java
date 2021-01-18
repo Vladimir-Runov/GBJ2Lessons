@@ -1,30 +1,52 @@
 public class Main {
 /*
-Создайте три класса Человек, Кот, Робот, которые не наследуются от одного класса.
-Эти классы должны уметь бегать и прыгать (методы просто выводят информацию о действии в консоль).
-
-Создайте два класса: беговая дорожка и стена, при прохождении через которые, участники должны выполнять соответствующие действия (бежать или прыгать),
-результат выполнения печатаем в консоль (успешно пробежал, не смог пробежать и т.д.).
-
-Создайте два массива: с участниками и препятствиями, и заставьте всех участников пройти этот набор препятствий.
-* У препятствий есть длина (для дорожки) или высота (для стены), а участников ограничения на бег и прыжки.
-Если участник не смог пройти одно из препятствий, то дальше по списку он препятствий не идет.
+1. Напишите метод, на вход которого подаётся двумерный строковый массив размером 4х4,
+при подаче массива другого размера необходимо бросить исключение MyArraySizeException.
+2. Далее метод должен пройтись по всем элементам массива, преобразовать в int, и просуммировать.
+Если в каком-то элементе массива преобразование не удалось (например, в ячейке лежит символ или текст вместо числа), д
+олжно быть брошено исключение MyArrayDataException, с детализацией в какой именно ячейке лежат неверные данные.
+3. В методе main() вызвать полученный метод, обработать возможные исключения MySizeArrayException и MyArrayDataException, и вывести результат расчета.
  */
-
     public static void main(String[] args) {
-	    Actiity[]  actors = {
-            new Human(), new Robot(),
-            new Human(), new Cat(),new Cat()
-        };
-	    Obstacle [] obstacles = {
-	                new Wall(),
-                   new Road(),
-                  new Wall()
-	    };
 
-           for (Obstacle ob: obstacles) {
-               for (Actiity ax: actors)
-                   ob.take(ax);
+            try {
+                System.out.println(sum4x4(new String[][]{   {"1", "0", "0", "0"},
+                                                            {"0", "1", "0", "0"},
+                                                            {"0", "0", "1", "0"},
+                                                            {"0", "0", "0", "1"}} ));
+
+                System.out.println(sum4x4(new String[][]{   {"1", "0", "0", "0"},
+                                                            {"0", "1", "0", "0", "0"},
+                                                            {"0", "0", "1", "0"},
+                                                            {"0", "0", "0", "1"}} ));
+
+                System.out.println(sum4x4(new String[][]{   {"1", "0", "0", "0"},
+                                                            {"0", "1", "0", "0"},
+                                                            {"0", "0",  "", "0"},
+                                                            {"0", "0", "0", "1"}} ));
+
+            } catch (TextDetailsException e) {
+                System.err.println(e.getMessage());
+            }
+    }
+
+    public static int sum4x4(String[][] strArray) throws MyArraySizeException, MyArrayDataException
+    {
+        int sum = 0;
+        if (4 != strArray.length)
+            throw new MyArraySizeException();
+
+        for (int i = 0; i < strArray.length; i++) {
+            if (4 != strArray[i].length)
+                throw new MyArraySizeException();
+            for (int j = 0; j < strArray[i].length; j++) {
+                try {
+                    sum += Integer.parseInt(strArray[i][j]);  // public static int parseInt(@NotNull String s) throws NumberFormatException
+                } catch (NumberFormatException e) {
+                    throw new MyArrayDataException(i, j);
+                }
+            }
         }
+        return sum;
     }
 }
